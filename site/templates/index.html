@@ -1,22 +1,3 @@
-선택한 항목 없음
-
-콘텐츠로 건너뛰기
-스크린 리더로 Gmail 사용하기
-Gmail의 데스크롭 알림을 사용 설정하세요.
-   확인  나중에 하기
-850개 중 1개
-(제목 없음)
-받은편지함
-
-Siyoung Park
-첨부파일
-오후 12:52 (0분 전)
-나에게
-
-이 메일은 영어로 작성된 것 같습니다
-
- 첨부파일 1개
-  •  Gmail에서 검사함
 <!doctype html>
 <html lang="ko">
 <head>
@@ -31,23 +12,18 @@ Siyoung Park
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
-
 <style>
   :root{
     /* 배경 — 과잠의 먹빛 검정 + 금빛 조명 (카드는 크림이라 어둡지 않게) */
     --bg-top:#2A2519; --bg-bot:#17140E;
     --gold:#E8B24D; --gold-deep:#B8882F; --gold-line:rgba(232,178,77,.26);
-
     --cream:#FBF6EC; --card:#FFFFFF; --line:#E8DFCB;
     --navy:#1B2A41; --navy-soft:#5b6b80;
     --ink:#14181F; --muted:#8A8172;
     --on-dark:#F3EADA;
-
     /* 가오리 팔레트 */
     --ray-b:#7CC0E6; --ray-d:#3F7FB0;
-
     --ok:#2E9E6B; --mid:#DB9A2C; --busy:#D65B4A;
-
     --r-lg:22px; --r-md:16px; --r-sm:11px;
     --font:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
     --pixel:"Press Start 2P", monospace;
@@ -69,7 +45,6 @@ Siyoung Park
     *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
   }
   :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px;}
-
   /* ---------- 헤더 ---------- */
   header{
     position:sticky;top:0;z-index:40;
@@ -90,7 +65,6 @@ Siyoung Park
   .hdr-live.on{color:var(--gold);border-color:rgba(232,178,77,.5);}
   .hdr-live.on .d{background:var(--gold);animation:blip 1.9s ease-out infinite;}
   @keyframes blip{0%{box-shadow:0 0 0 0 rgba(232,178,77,.6);}70%{box-shadow:0 0 0 7px rgba(232,178,77,0);}100%{box-shadow:0 0 0 0 rgba(232,178,77,0);}}
-
   /* ---------- 설계도 2×2 배치 ---------- */
   .grid{display:grid;grid-template-columns:1.42fr 1fr;gap:12px;margin-top:16px;align-items:start;}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);}
@@ -98,7 +72,6 @@ Siyoung Park
   .status-card{grid-column:2;grid-row:1;padding:16px 14px;background:var(--cream);}
   .menu-card  {grid-column:1;grid-row:2;padding:16px;}
   .alarm-card {grid-column:2;grid-row:2;align-self:start;}
-
   /* ---------- 카메라 + LIVE 가오리 ---------- */
   .cam-frame{position:relative;width:100%;aspect-ratio:4/3;border-radius:var(--r-md);background:#0b0e13;overflow:hidden;}
   .cam-frame img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -118,7 +91,6 @@ Siyoung Park
     box-shadow:2px 2px 0 rgba(0,0,0,.35);
   }
   .cam-note{margin-top:9px;font-size:10.5px;color:#8ea2b5;font-weight:600;line-height:1.5;}
-
   /* ---------- 상태 ---------- */
   .st-pill{
     display:inline-flex;align-items:center;justify-content:center;width:100%;
@@ -130,6 +102,9 @@ Siyoung Park
   .st-pill.busy{background:#FBE7E2;color:var(--busy);}
   .st-word{margin-top:14px;font-size:38px;font-weight:900;line-height:1;letter-spacing:-.03em;color:var(--navy-soft);transition:color .35s ease;}
   .st-reco{margin-top:8px;font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.5;min-height:2.6em;}
+  /* 대기시간 — 여유/보통/혼잡 글자만큼 크게 표시 (신규 추가) */
+  .st-wait{margin-top:6px;font-size:34px;font-weight:900;line-height:1.05;letter-spacing:-.02em;color:var(--navy);transition:color .35s ease;}
+  .st-wait .unit{font-size:15px;font-weight:800;margin-left:2px;}
   .st-count{
     margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
     display:flex;align-items:baseline;justify-content:space-between;gap:6px;
@@ -137,7 +112,6 @@ Siyoung Park
   .st-count .k{font-size:11px;color:var(--muted);font-weight:700;}
   .st-count .v{font-size:19px;font-weight:800;color:var(--navy);}
   .st-time{margin-top:8px;font-size:10.5px;color:var(--muted);font-weight:600;}
-
   /* ---------- 알림 (설계도의 핵심) ---------- */
   .alarm-card{
     width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);
@@ -180,7 +154,6 @@ Siyoung Park
   .alarm-label{display:block;margin-top:11px;font-size:13.5px;font-weight:800;color:var(--navy);}
   .alarm-card.on .alarm-label{color:var(--gold-deep);}
   .alarm-sub{display:block;margin-top:3px;font-size:10.5px;font-weight:600;color:var(--muted);line-height:1.45;}
-
   /* ---------- 급식 ---------- */
   .menu-card .head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:12px;}
   .menu-card .head h2{font-size:16px;font-weight:800;margin:0;color:var(--navy);}
@@ -193,7 +166,6 @@ Siyoung Park
   .meal-list li:first-child{border-top:0;}
   .meal-list li.empty{color:var(--muted);}
   .allergy{margin-top:16px;font-size:10.5px;color:rgba(243,234,218,.5);line-height:1.65;text-align:center;}
-
   /* ---------- 로딩 ---------- */
   #loading{
     position:fixed;inset:0;z-index:100;
@@ -205,22 +177,20 @@ Siyoung Park
   #loading.hide{opacity:0;visibility:hidden;pointer-events:none;}
   #loading .sp{width:96px;height:auto;object-fit:contain;filter:drop-shadow(0 8px 16px rgba(0,0,0,.45));animation:dance 1.1s ease-in-out infinite;}
   #loading .txt{font-size:12.5px;font-weight:700;color:rgba(243,234,218,.8);}
-
   @media (max-width:430px){
     .grid{grid-template-columns:1fr;}
     .cam-card,.status-card,.menu-card,.alarm-card{grid-column:1;grid-row:auto;}
     .st-word{font-size:44px;}
+    .st-wait{font-size:38px;}
     .st-reco{min-height:0;}
   }
 </style>
 </head>
 <body>
-
 <div id="loading">
   <img class="sp" id="loadRay" src="/static/mascot.png" alt="" />
   <div class="txt">가오리가 줄을 세어보는 중…</div>
 </div>
-
 <header>
   <div class="nav">
     <div class="brand">
@@ -230,22 +200,21 @@ Siyoung Park
     <span class="hdr-live" id="hdrLive"><span class="d"></span><span id="liveLabel">연결 대기</span></span>
   </div>
 </header>
-
 <div class="wrap">
   <div class="grid">
-
     <!-- 상태 (설계도: 오른쪽 위) -->
     <section class="card status-card">
       <span class="st-pill" id="stPill">확인 중</span>
       <div class="st-word" id="statusWord">—</div>
       <div class="st-reco" id="statusReco">데이터를 불러오는 중이에요</div>
+      <!-- 대기시간 — 신규 추가, 크게 표시 -->
+      <div class="st-wait num" id="statusWait">—</div>
       <div class="st-count">
         <span class="k">현재 대기</span>
         <span class="v num" id="gaugeNum">—</span>
       </div>
       <div class="st-time" id="updated">연결 중…</div>
     </section>
-
     <!-- 카메라 (설계도: 왼쪽 위 + LIVE 표지판 든 가오리) -->
     <section class="card cam-card">
       <div class="cam-frame">
@@ -261,7 +230,6 @@ Siyoung Park
       </div>
       <p class="cam-note">대기줄 실시간 · 사람은 블러 처리되며 저장하지 않습니다</p>
     </section>
-
     <!-- 급식 (설계도: 왼쪽 아래, 항상 보임) -->
     <section class="card menu-card">
       <div class="head"><h2>오늘의 급식</h2><span class="date" id="todayDate"></span></div>
@@ -272,7 +240,6 @@ Siyoung Park
       </div>
       <ul class="meal-list" id="mealList"></ul>
     </section>
-
     <!-- 알림 (설계도: 오른쪽 아래 — 설정하면 헤엄쳐 가고, 취소하면 돌아옴) -->
     <button class="alarm-card" id="alarmBtn" aria-pressed="false">
       <span class="tank">
@@ -284,16 +251,13 @@ Siyoung Park
       <span class="alarm-label" id="alarmLabel">알림 설정</span>
       <span class="alarm-sub" id="alarmSub">여유해지면 알려드려요</span>
     </button>
-
   </div>
-
   <p class="allergy">
     알레르기 유발식품: ①난류 ②우유 ③메밀 ④땅콩 ⑤대두 ⑥밀 ⑦고등어 ⑧게 ⑨새우 ⑩돼지고기
     ⑪복숭아 ⑫토마토 ⑬아황산류 ⑭호두 ⑮닭고기 ⑯쇠고기 ⑰오징어 ⑱조개류 ⑲잣<br />
     ※ 식자재 수급 사정에 따라 메뉴가 변경될 수 있습니다.
   </p>
 </div>
-
 <script>
 /* ======================= 설정 ======================= */
 const CONFIG = {
@@ -316,21 +280,20 @@ const LEVELS = {
   mid:  { word:"보통", reco:"조금 붐벼요" },
   busy: { word:"혼잡", reco:"많이 붐벼요<br>잠시 후 추천" },
 };
-
 /* ======================= 상태 ======================= */
 const $ = (id) => document.getElementById(id);
-const state = { value:null, updatedAt:null, live:false };
+// wait: 대기시간(분) - 신규 추가
+const state = { value:null, wait:null, updatedAt:null, live:false };
 let firstLoadDone = false, lastLevel = null;
-
 function applyState(){
   const pill=$("stPill"), wordEl=$("statusWord"), recoEl=$("statusReco");
-  const numEl=$("gaugeNum"), hdr=$("hdrLive"), label=$("liveLabel");
-
+  const numEl=$("gaugeNum"), hdr=$("hdrLive"), label=$("liveLabel"), waitEl=$("statusWait");
   if (state.value == null){
     pill.className="st-pill"; pill.textContent="확인 중";
     wordEl.textContent="—"; wordEl.style.color="var(--navy-soft)";
     recoEl.textContent="데이터를 불러오는 중이에요";
     numEl.textContent="—";
+    waitEl.innerHTML="—";
     hdr.className="hdr-live"; label.textContent="연결 대기";
   } else {
     const key = levelOf(state.value), L = LEVELS[key];
@@ -339,6 +302,14 @@ function applyState(){
     wordEl.style.color = key==="ok" ? "var(--ok)" : key==="mid" ? "var(--mid)" : "var(--busy)";
     recoEl.innerHTML = L.reco;
     numEl.textContent = state.value + "명";
+    // 대기시간 표시 (신규): 서버가 안 주면 인원수 기반 문구로 대체
+    if (state.wait == null){
+      waitEl.innerHTML = "—";
+    } else if (state.wait <= 0){
+      waitEl.innerHTML = "바로 가능";
+    } else {
+      waitEl.innerHTML = "약 " + state.wait + "<span class=\"unit\">분</span>";
+    }
     hdr.className = "hdr-live" + (state.live ? " on" : "");
     label.textContent = state.live ? "실시간" : "예시";
     checkAlarm(key);
@@ -346,7 +317,6 @@ function applyState(){
   }
   updateRelative();
 }
-
 function updateRelative(){
   const el = $("updated");
   if (state.value == null){ el.textContent = "연결 중…"; return; }
@@ -355,7 +325,6 @@ function updateRelative(){
   const txt = sec<5 ? "방금 전" : sec<60 ? sec+"초 전" : Math.floor(sec/60)+"분 전";
   el.textContent = "업데이트 " + txt + (sec > CONFIG.staleAfterSec ? " · 지연" : "");
 }
-
 async function pollCongestion(){
   try{
     const r = await fetch(CONFIG.congestionApiUrl, {cache:"no-store"});
@@ -363,6 +332,9 @@ async function pollCongestion(){
     const d = await r.json();
     if (typeof d.count !== "number") throw new Error("no count");
     state.value = d.count;
+    // 대기시간 필드 읽기 (신규) - server.py는 wait_minutes 로 보내줌
+    const w = (d.wait_minutes ?? d.waitMinutes ?? d.wait);
+    state.wait = (typeof w === "number") ? w : null;
     state.updatedAt = d.updatedAt ? new Date(d.updatedAt) : new Date();
     state.live = true;
     applyState();
@@ -373,12 +345,10 @@ async function pollCongestion(){
     if (!firstLoadDone){ firstLoadDone = true; $("loading").classList.add("hide"); }
   }
 }
-
 /* ======================= 알림 =======================
    설계도: 설정하면 가오리가 헤엄쳐 나가고, 취소하면 돌아온다 */
 let alarmOn = false;
 const alarmBtn = $("alarmBtn");
-
 function setAlarm(on){
   alarmOn = on;
   alarmBtn.classList.toggle("on", on);
@@ -386,7 +356,6 @@ function setAlarm(on){
   $("alarmLabel").textContent = on ? "알림 취소" : "알림 설정";
   $("alarmSub").innerHTML = on ? "여유해지면<br>알리러 갔어요" : "여유해지면<br>알려드려요";
 }
-
 alarmBtn.addEventListener("click", async () => {
   if (alarmOn){ setAlarm(false); return; }          // 취소 → 가오리가 돌아옴
   if (!("Notification" in window)){
@@ -401,7 +370,6 @@ alarmBtn.addEventListener("click", async () => {
   }
   setAlarm(true);                                    // 설정 → 가오리가 헤엄쳐 나감
 });
-
 function checkAlarm(key){
   if (!alarmOn || !state.live) return;
   if (key === "ok" && lastLevel && lastLevel !== "ok"){
@@ -411,7 +379,6 @@ function checkAlarm(key){
     setAlarm(false);                                 // 알리고 나면 가오리가 돌아옴
   }
 }
-
 /* ======================= 급식 ======================= */
 let menuData = CONFIG.fallbackMenu;
 function activeMealKey(){ return document.querySelector(".tab.active")?.dataset.meal || "lunch"; }
@@ -452,7 +419,6 @@ async function loadMenu(){
     renderMeal(activeMealKey());
   }
 }
-
 /* ======================= 시작 ======================= */
 (function init(){
   const now = new Date(), days = ["일","월","화","수","목","금","토"];
@@ -462,7 +428,6 @@ async function loadMenu(){
   pollCongestion();
   setInterval(pollCongestion, Math.max(2, CONFIG.pollIntervalSec) * 1000);
   setInterval(updateRelative, 1000);
-
   // 카메라: 끊겨도 3초 뒤 자동 재연결
   const img = $("camStream"), loading = $("camLoading");
   img.addEventListener("load",  () => { loading.style.display="none"; img.style.display="block"; });
@@ -471,7 +436,6 @@ async function loadMenu(){
     setTimeout(() => { img.src = CONFIG.camStreamUrl + "?t=" + Date.now(); }, 3000);
   });
   img.src = CONFIG.camStreamUrl;
-
   setTimeout(() => { $("loading").classList.add("hide"); }, 1800);
 })();
 </script>
