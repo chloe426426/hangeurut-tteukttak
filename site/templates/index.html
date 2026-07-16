@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1" />
 <title>한그릇 뚝딱</title>
 <meta name="description" content="강원과학고등학교 급식실의 현재 혼잡도를 알려주는 알리미입니다." />
 <link rel="manifest" href="/manifest.json" />
@@ -15,197 +15,215 @@
 
 <style>
   :root{
-    /* 배경 — 과잠의 먹빛 검정 + 금빛 조명 (카드는 크림이라 어둡지 않게) */
     --bg-top:#2A2519; --bg-bot:#17140E;
     --gold:#E8B24D; --gold-deep:#B8882F; --gold-line:rgba(232,178,77,.26);
-
     --cream:#FBF6EC; --card:#FFFFFF; --line:#E8DFCB;
     --navy:#1B2A41; --navy-soft:#5b6b80;
-    --ink:#14181F; --muted:#8A8172;
-    --on-dark:#F3EADA;
-
-    /* 가오리 팔레트 */
-    --ray-b:#7CC0E6; --ray-d:#3F7FB0;
-
+    --ink:#14181F; --muted:#8A8172; --on-dark:#F3EADA;
     --ok:#2E9E6B; --mid:#DB9A2C; --busy:#D65B4A;
-
-    --r-lg:22px; --r-md:16px; --r-sm:11px;
+    --r-lg:18px; --r-md:13px; --r-sm:10px;
     --font:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
     --pixel:"Press Start 2P", monospace;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  html,body{margin:0;padding:0;height:100%;}
   body{
-    font-family:var(--font); color:var(--ink); min-height:100vh; overflow-x:hidden;
+    font-family:var(--font); color:var(--ink);
+    height:100dvh; overflow:hidden;              /* 한 화면 고정 — 페이지 스크롤 없음 */
+    display:flex; flex-direction:column;
     -webkit-font-smoothing:antialiased;
     background:
-      radial-gradient(900px 520px at 50% -8%, rgba(232,178,77,.20), transparent 62%),
+      radial-gradient(900px 480px at 50% -10%, rgba(232,178,77,.20), transparent 62%),
       linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bot) 100%);
-    background-attachment:fixed;
   }
-  .wrap{max-width:520px;margin:0 auto;padding:0 16px 44px;}
-  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
   button{font-family:inherit;}
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
   }
-  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px;}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:8px;}
 
   /* ---------- 헤더 ---------- */
   header{
-    position:sticky;top:0;z-index:40;
-    background:rgba(23,20,14,.74); backdrop-filter:blur(12px) saturate(150%);
-    border-bottom:1px solid var(--gold-line);
+    flex:none; border-bottom:1px solid var(--gold-line);
+    background:rgba(23,20,14,.6);
   }
-  .nav{display:flex;align-items:center;justify-content:space-between;height:58px;max-width:520px;margin:0 auto;padding:0 16px;}
-  .brand{display:flex;align-items:center;gap:9px;}
-  .brand .logo{width:30px;height:30px;flex:none;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));}
-  .brand .word{font-weight:800;font-size:16.5px;letter-spacing:-.01em;color:var(--on-dark);}
-  .brand .word b{color:var(--gold);font-weight:800;}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:50px;max-width:560px;margin:0 auto;padding:0 14px;}
+  .brand{display:flex;align-items:center;gap:8px;}
+  .brand img{width:26px;height:26px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));}
+  .brand .word{font-weight:800;font-size:15px;letter-spacing:-.01em;color:var(--on-dark);}
+  .brand .word b{color:var(--gold);}
   .hdr-live{
-    display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;
-    border:1px solid var(--gold-line); font-size:11px;font-weight:700;letter-spacing:.06em;
-    color:rgba(243,234,218,.62);
+    display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:999px;
+    border:1px solid var(--gold-line);font-size:10.5px;font-weight:700;color:rgba(243,234,218,.6);
   }
-  .hdr-live .d{width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .hdr-live .d{width:5px;height:5px;border-radius:50%;background:currentColor;}
   .hdr-live.on{color:var(--gold);border-color:rgba(232,178,77,.5);}
   .hdr-live.on .d{background:var(--gold);animation:blip 1.9s ease-out infinite;}
-  @keyframes blip{0%{box-shadow:0 0 0 0 rgba(232,178,77,.6);}70%{box-shadow:0 0 0 7px rgba(232,178,77,0);}100%{box-shadow:0 0 0 0 rgba(232,178,77,0);}}
+  @keyframes blip{0%{box-shadow:0 0 0 0 rgba(232,178,77,.6);}70%{box-shadow:0 0 0 6px rgba(232,178,77,0);}100%{box-shadow:0 0 0 0 rgba(232,178,77,0);}}
 
-  /* ---------- 설계도 2×2 배치 ---------- */
-  .grid{display:grid;grid-template-columns:1.42fr 1fr;gap:12px;margin-top:16px;align-items:start;}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);}
-  .cam-card   {grid-column:1;grid-row:1;padding:12px;background:#12161d;border-color:rgba(232,178,77,.22);}
-  .status-card{grid-column:2;grid-row:1;padding:16px 14px;background:var(--cream);}
-  .menu-card  {grid-column:1;grid-row:2;padding:16px;}
-  .alarm-card {grid-column:2;grid-row:2;align-self:start;}
-
-  /* ---------- 카메라 + LIVE 가오리 ---------- */
-  .cam-frame{position:relative;width:100%;aspect-ratio:4/3;border-radius:var(--r-md);background:#0b0e13;overflow:hidden;}
-  .cam-frame img{width:100%;height:100%;object-fit:cover;display:block;}
-  .cam-loading{
-    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
-    color:#9fb6cc;font-size:11.5px;font-weight:600;text-align:center;padding:8px;
+  /* ---------- 설계도 2×2 — 화면에 꽉 채움 ---------- */
+  .wrap{flex:1;min-height:0;max-width:560px;width:100%;margin:0 auto;padding:10px 10px 12px;display:flex;flex-direction:column;gap:9px;}
+  .grid{
+    flex:1;min-height:0;display:grid;
+    grid-template-columns:1.3fr 1fr; grid-template-rows:1.02fr 1fr; gap:9px;
   }
-  .cam-loading .sp{width:34px;height:auto;object-fit:contain;animation:bob 1.2s ease-in-out infinite;}
-  @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-5px) rotate(4deg);}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);min-height:0;overflow:hidden;}
+
+  /* 카메라 — 왼쪽 위 */
+  .cam-card{grid-column:1;grid-row:1;position:relative;background:#0b0e13;border-color:rgba(232,178,77,.22);}
+  .cam-card img.feed{width:100%;height:100%;object-fit:cover;display:block;}
+  .cam-loading{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+    color:#9fb6cc;font-size:11px;font-weight:600;text-align:center;padding:8px;
+  }
+  .cam-loading img{width:30px;height:auto;object-fit:contain;animation:bob 1.3s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-4px) rotate(5deg);}}
+  .cam-tag{
+    position:absolute;left:8px;top:8px;font-size:9.5px;font-weight:700;color:rgba(255,255,255,.75);
+    background:rgba(0,0,0,.45);padding:3px 7px;border-radius:999px;backdrop-filter:blur(4px);
+  }
   /* 설계도: 가오리가 LIVE 표지판을 들고 있음 */
-  .live-ray{position:absolute;right:6px;bottom:5px;display:flex;align-items:flex-end;gap:3px;z-index:2;}
-  .live-ray .r{width:26px;height:auto;object-fit:contain;filter:drop-shadow(0 2px 5px rgba(0,0,0,.5));animation:flap .9s ease-in-out infinite;}
+  .live-ray{position:absolute;right:6px;bottom:6px;display:flex;align-items:flex-end;gap:2px;z-index:2;}
+  .live-ray img{width:24px;height:auto;object-fit:contain;filter:drop-shadow(0 2px 5px rgba(0,0,0,.55));animation:flap .9s ease-in-out infinite;}
   @keyframes flap{0%,100%{transform:translateY(0) rotate(-6deg);}50%{transform:translateY(-4px) rotate(6deg);}}
   .live-badge{
-    font-family:var(--pixel);font-size:7px;color:#14181F;background:var(--gold);
-    padding:4px 5px;border:2px solid #14181F;border-radius:3px;letter-spacing:.02em;
-    box-shadow:2px 2px 0 rgba(0,0,0,.35);
+    font-family:var(--pixel);font-size:6.5px;color:#14181F;background:var(--gold);
+    padding:3px 4px;border:2px solid #14181F;border-radius:3px;box-shadow:2px 2px 0 rgba(0,0,0,.35);
+    transition:background .3s ease,color .3s ease;
   }
-  .cam-note{margin-top:9px;font-size:10.5px;color:#8ea2b5;font-weight:600;line-height:1.5;}
+  /* 카메라가 끊기면 LIVE 가 아니라 OFF 로 (실제 상태를 정직하게 표시) */
+  .live-badge.off{background:#6b6f78;color:#d9dde3;}
+  .live-ray.off img{animation:none;filter:grayscale(.85) drop-shadow(0 2px 5px rgba(0,0,0,.55));opacity:.65;}
 
-  /* ---------- 상태 ---------- */
-  .st-pill{
-    display:inline-flex;align-items:center;justify-content:center;width:100%;
-    padding:7px 10px;border-radius:999px;font-size:12.5px;font-weight:800;
-    background:#EDE4D2;color:var(--muted);transition:background .3s ease,color .3s ease;
+  /* 상태 — 오른쪽 위. 카드 전체가 신호등처럼 색이 바뀜 */
+  .status-card{
+    grid-column:2;grid-row:1;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:10px;text-align:center;background:#E9E2D4;
+    transition:background-color .45s ease;
   }
-  .st-pill.ok{background:#E4F5EC;color:var(--ok);}
-  .st-pill.mid{background:#FBF0DA;color:var(--mid);}
-  .st-pill.busy{background:#FBE7E2;color:var(--busy);}
-  .st-word{margin-top:14px;font-size:38px;font-weight:900;line-height:1;letter-spacing:-.03em;color:var(--navy-soft);transition:color .35s ease;}
-  .st-reco{margin-top:8px;font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.5;min-height:2.6em;}
+  .status-card.ok{background:var(--ok);} .status-card.mid{background:var(--mid);} .status-card.busy{background:var(--busy);}
+  /* 여유/보통/혼잡 글자 — 대기시간 숫자와 균형 맞추려고 살짝 줄임 */
+  .st-word{
+    font-size:clamp(20px,6.5vw,26px);font-weight:900;line-height:1;letter-spacing:-.03em;
+    color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.16);
+  }
+  .status-card:not(.ok):not(.mid):not(.busy) .st-word{color:var(--navy-soft);text-shadow:none;}
+  .st-reco{margin-top:5px;font-size:10.5px;font-weight:700;color:rgba(255,255,255,.92);line-height:1.3;}
+  .status-card:not(.ok):not(.mid):not(.busy) .st-reco{color:var(--muted);}
   .st-count{
-    margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
-    display:flex;align-items:baseline;justify-content:space-between;gap:6px;
+    margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.3);width:100%;
+    color:#fff;
   }
-  .st-count .k{font-size:11px;color:var(--muted);font-weight:700;}
-  .st-count .v{font-size:19px;font-weight:800;color:var(--navy);}
-  .st-time{margin-top:8px;font-size:10.5px;color:var(--muted);font-weight:600;}
+  .status-card:not(.ok):not(.mid):not(.busy) .st-count{border-top-color:var(--line);color:var(--navy);}
+  .st-count small{font-size:10px;font-weight:600;opacity:.8;display:block;margin-bottom:2px;}
+  /* 대기시간 숫자 — 여유/보통/혼잡 글자만큼 크게 (요청사항) */
+  .st-count b{
+    font-size:clamp(26px,9vw,36px);font-weight:900;letter-spacing:-.02em;display:block;line-height:1.05;
+  }
+  .st-count .sub{display:block;margin-top:2px;font-size:10.5px;font-weight:700;opacity:.82;}
+  .st-time{margin-top:5px;font-size:9.5px;font-weight:600;color:rgba(255,255,255,.75);}
+  .status-card:not(.ok):not(.mid):not(.busy) .st-time{color:var(--muted);}
 
-  /* ---------- 알림 (설계도의 핵심) ---------- */
-  .alarm-card{
-    width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);
-    padding:12px 12px 14px;cursor:pointer;text-align:center;display:block;
-    transition:border-color .25s ease, box-shadow .25s ease, transform .12s ease;
-  }
-  .alarm-card:hover{border-color:var(--gold-deep);box-shadow:0 6px 18px -10px rgba(184,136,47,.7);}
-  .alarm-card:active{transform:scale(.985);}
-  .alarm-card.on{border-color:var(--gold);background:linear-gradient(180deg,#FFF9EC,#FFF3DC);}
-  .tank{
-    position:relative;width:100%;height:74px;border-radius:var(--r-sm);overflow:hidden;
-    background:linear-gradient(180deg,#EAF4FB,#D6E9F6);border:1px solid #DCE9F2;
-  }
-  .alarm-card.on .tank{background:linear-gradient(180deg,#FFF6E4,#FCEDD2);border-color:#F0E0BC;}
-  /* 가오리: 평소엔 춤추고, 설정하면 헤엄쳐 나감 */
-  .swimmer{
-    position:absolute;left:50%;top:50%;width:44px;height:47px;margin:-24px 0 0 -22px;
-    transition:transform .85s cubic-bezier(.45,.05,.25,1), opacity .85s ease;
-  }
-  .swimmer .r{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 7px rgba(27,42,65,.3));animation:dance 1.1s ease-in-out infinite;transform-origin:50% 85%;}
-  @keyframes dance{
-    0%   {transform:translateY(0)    rotate(-8deg);}
-    25%  {transform:translateY(-5px) rotate(0deg);}
-    50%  {transform:translateY(0)    rotate(8deg);}
-    75%  {transform:translateY(-5px) rotate(0deg);}
-    100% {transform:translateY(0)    rotate(-8deg);}
-  }
-  .alarm-card.on .swimmer{transform:translate(96px,-30px) rotate(-16deg);opacity:0;}
-  .alarm-card.on .swimmer .r{animation:none;}
-  .bubbles{position:absolute;inset:0;pointer-events:none;opacity:0;}
-  .alarm-card.on .bubbles{opacity:1;}
-  .bubbles i{
-    position:absolute;display:block;border-radius:50%;background:rgba(255,255,255,.9);
-    border:1px solid rgba(184,136,47,.35);
-  }
-  .bubbles i:nth-child(1){width:6px;height:6px;left:36%;top:54%;animation:rise 1.5s ease-out infinite;}
-  .bubbles i:nth-child(2){width:4px;height:4px;left:47%;top:62%;animation:rise 1.5s ease-out .35s infinite;}
-  .bubbles i:nth-child(3){width:8px;height:8px;left:28%;top:60%;animation:rise 1.5s ease-out .7s infinite;}
-  @keyframes rise{0%{transform:translateY(0);opacity:0;}25%{opacity:.95;}100%{transform:translateY(-34px) translateX(8px);opacity:0;}}
-  .alarm-label{display:block;margin-top:11px;font-size:13.5px;font-weight:800;color:var(--navy);}
-  .alarm-card.on .alarm-label{color:var(--gold-deep);}
-  .alarm-sub{display:block;margin-top:3px;font-size:10.5px;font-weight:600;color:var(--muted);line-height:1.45;}
-
-  /* ---------- 급식 ---------- */
-  .menu-card .head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:12px;}
-  .menu-card .head h2{font-size:16px;font-weight:800;margin:0;color:var(--navy);}
-  .menu-card .head .date{font-size:11px;color:var(--muted);font-weight:600;}
-  .tabs{display:flex;gap:4px;background:var(--cream);padding:4px;border-radius:999px;margin-bottom:12px;}
-  .tab{flex:1;text-align:center;padding:7px 0;border-radius:999px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:background .15s ease,color .15s ease;}
+  /* 급식 — 왼쪽 아래 */
+  .menu-card{grid-column:1;grid-row:2;display:flex;flex-direction:column;padding:11px 11px 4px;}
+  .menu-card .head{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:8px;flex:none;}
+  .menu-card .head h2{font-size:13.5px;font-weight:800;margin:0;color:var(--navy);}
+  .menu-card .head .date{font-size:10px;color:var(--muted);font-weight:600;}
+  .tabs{display:flex;gap:3px;background:var(--cream);padding:3px;border-radius:999px;margin-bottom:7px;flex:none;}
+  .tab{flex:1;text-align:center;padding:5px 0;border-radius:999px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:background .15s ease,color .15s ease;}
   .tab.active{background:var(--navy);color:#fff;}
-  .meal-list{list-style:none;margin:0;padding:0;}
-  .meal-list li{padding:7px 2px;border-top:1px dashed var(--line);font-size:13.5px;color:var(--ink);}
+  .meal-list{list-style:none;margin:0;padding:0 0 6px;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .meal-list li{padding:5px 1px;border-top:1px dashed var(--line);font-size:12px;color:var(--ink);line-height:1.35;}
   .meal-list li:first-child{border-top:0;}
   .meal-list li.empty{color:var(--muted);}
-  .allergy{margin-top:16px;font-size:10.5px;color:rgba(243,234,218,.5);line-height:1.65;text-align:center;}
 
-  /* ---------- 로딩 ---------- */
+  /* 알림 — 오른쪽 아래 (설계도: 설정하면 헤엄쳐 가고, 취소하면 돌아옴) */
+  .alarm-card{
+    grid-column:2;grid-row:2;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);
+    padding:9px;cursor:pointer;text-align:center;display:flex;flex-direction:column;min-height:0;
+    transition:border-color .25s ease, background .3s ease, transform .12s ease;
+  }
+  .alarm-card:active{transform:scale(.98);}
+  .alarm-card.on{border-color:var(--gold);background:linear-gradient(180deg,#FFF9EC,#FFF1D6);}
+  .tank{
+    position:relative;flex:1;min-height:0;border-radius:var(--r-md);overflow:hidden;
+    background:linear-gradient(180deg,#EAF4FB,#D6E9F6);border:1px solid #DCE9F2;
+  }
+  .alarm-card.on .tank{background:linear-gradient(180deg,#FFF6E4,#FBEBCE);border-color:#F0E0BC;}
+  .swimmer{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:56%;max-width:52px;
+    transition:transform .85s cubic-bezier(.45,.05,.25,1), opacity .85s ease;
+  }
+  .swimmer img{width:100%;height:auto;object-fit:contain;display:block;
+    filter:drop-shadow(0 4px 7px rgba(27,42,65,.3));
+    animation:dance 1.1s ease-in-out infinite;transform-origin:50% 85%;}
+  @keyframes dance{
+    0%{transform:translateY(0) rotate(-8deg);} 25%{transform:translateY(-4px) rotate(0deg);}
+    50%{transform:translateY(0) rotate(8deg);} 75%{transform:translateY(-4px) rotate(0deg);}
+    100%{transform:translateY(0) rotate(-8deg);}
+  }
+  .alarm-card.on .swimmer{transform:translate(90px,-46px) rotate(-18deg);opacity:0;}
+  .alarm-card.on .swimmer img{animation:none;}
+  .bubbles{position:absolute;inset:0;pointer-events:none;opacity:0;}
+  .alarm-card.on .bubbles{opacity:1;}
+  .bubbles i{position:absolute;display:block;border-radius:50%;background:rgba(255,255,255,.92);border:1px solid rgba(184,136,47,.35);}
+  .bubbles i:nth-child(1){width:5px;height:5px;left:38%;top:52%;animation:rise 1.5s ease-out infinite;}
+  .bubbles i:nth-child(2){width:4px;height:4px;left:50%;top:60%;animation:rise 1.5s ease-out .35s infinite;}
+  .bubbles i:nth-child(3){width:7px;height:7px;left:30%;top:58%;animation:rise 1.5s ease-out .7s infinite;}
+  @keyframes rise{0%{transform:translateY(0);opacity:0;}25%{opacity:.95;}100%{transform:translateY(-30px) translateX(7px);opacity:0;}}
+  .alarm-label{flex:none;margin-top:7px;font-size:12px;font-weight:800;color:var(--navy);}
+  .alarm-card.on .alarm-label{color:var(--gold-deep);}
+  .alarm-sub{flex:none;margin-top:2px;font-size:9.5px;font-weight:600;color:var(--muted);line-height:1.35;}
+  /* 몇 명이 알림을 기다리는지 — 한꺼번에 몰릴 수 있음을 알려 준다 */
+  .alarm-count{
+    flex:none;margin-top:5px;font-size:9.5px;font-weight:800;color:var(--gold-deep);
+    background:#FFF4DE;border:1px solid #F0E0BC;border-radius:999px;padding:2px 7px;
+    align-self:center;
+  }
+
+  /* 여유 알림 배너 */
+  .toast{
+    position:fixed;left:50%;bottom:16px;transform:translate(-50%,140%);
+    display:flex;align-items:center;gap:9px;z-index:90;
+    background:var(--ok);color:#fff;padding:11px 16px;border-radius:999px;
+    font-size:13px;font-weight:800;box-shadow:0 10px 28px -8px rgba(0,0,0,.5);
+    transition:transform .5s cubic-bezier(.2,.9,.2,1);white-space:nowrap;
+  }
+  .toast.show{transform:translate(-50%,0);}
+  .toast img{width:26px;height:auto;object-fit:contain;}
+
   #loading{
     position:fixed;inset:0;z-index:100;
-    background:radial-gradient(700px 400px at 50% 40%, rgba(232,178,77,.22), transparent 60%),
+    background:radial-gradient(700px 380px at 50% 40%, rgba(232,178,77,.22), transparent 60%),
                linear-gradient(180deg,var(--bg-top),var(--bg-bot));
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;
     transition:opacity .45s ease, visibility .45s ease;
   }
   #loading.hide{opacity:0;visibility:hidden;pointer-events:none;}
-  #loading .sp{width:96px;height:auto;object-fit:contain;filter:drop-shadow(0 8px 16px rgba(0,0,0,.45));animation:dance 1.1s ease-in-out infinite;}
-  #loading .txt{font-size:12.5px;font-weight:700;color:rgba(243,234,218,.8);}
+  #loading img{width:88px;height:auto;object-fit:contain;filter:drop-shadow(0 8px 16px rgba(0,0,0,.45));animation:dance 1.1s ease-in-out infinite;}
+  #loading .txt{font-size:12px;font-weight:700;color:rgba(243,234,218,.8);}
 
-  @media (max-width:430px){
-    .grid{grid-template-columns:1fr;}
-    .cam-card,.status-card,.menu-card,.alarm-card{grid-column:1;grid-row:auto;}
-    .st-word{font-size:44px;}
-    .st-reco{min-height:0;}
+  /* 화면이 아주 낮으면(가로모드 등) 스크롤 허용 */
+  @media (max-height:520px){
+    body{height:auto;min-height:100dvh;overflow:auto;}
+    .grid{grid-template-rows:200px 190px;}
   }
 </style>
 </head>
 <body>
 
 <div id="loading">
-  <img class="sp" id="loadRay" src="/static/mascot.png" alt="" />
+  <img src="/static/mascot.png" alt="" />
   <div class="txt">가오리가 줄을 세어보는 중…</div>
 </div>
 
 <header>
   <div class="nav">
     <div class="brand">
-      <img class="logo" id="logoRay" src="/static/mascot.png" alt="" />
+      <img src="/static/mascot.png" alt="" />
       <span class="word">한그릇 <b>뚝딱</b></span>
     </div>
     <span class="hdr-live" id="hdrLive"><span class="d"></span><span id="liveLabel">연결 대기</span></span>
@@ -215,35 +233,29 @@
 <div class="wrap">
   <div class="grid">
 
-    <!-- 상태 (설계도: 오른쪽 위) -->
-    <section class="card status-card">
-      <span class="st-pill" id="stPill">확인 중</span>
-      <div class="st-word" id="statusWord">—</div>
-      <div class="st-reco" id="statusReco">데이터를 불러오는 중이에요</div>
-      <div class="st-count">
-        <span class="k">현재 대기</span>
-        <span class="v num" id="gaugeNum">—</span>
+    <!-- 카메라 (설계도: 왼쪽 위) -->
+    <section class="card cam-card">
+      <div class="cam-loading" id="camLoading">
+        <img src="/static/mascot.png" alt="" />
+        영상 연결 중…
       </div>
+      <img class="feed" id="camStream" alt="대기줄 실시간 (블러 처리)" style="display:none" />
+      <span class="cam-tag">블러 처리 · 저장 안 함</span>
+      <div class="live-ray" id="liveRay">
+        <img src="/static/mascot.png" alt="" />
+        <span class="live-badge" id="liveBadge">LIVE</span>
+      </div>
+    </section>
+
+    <!-- 상태 (설계도: 오른쪽 위) -->
+    <section class="card status-card" id="statusCard">
+      <div class="st-word" id="statusWord">—</div>
+      <div class="st-reco" id="statusReco">불러오는 중</div>
+      <div class="st-count"><small>예상 대기</small><b id="waitVal">—</b><span class="sub num" id="gaugeNum"></span></div>
       <div class="st-time" id="updated">연결 중…</div>
     </section>
 
-    <!-- 카메라 (설계도: 왼쪽 위 + LIVE 표지판 든 가오리) -->
-    <section class="card cam-card">
-      <div class="cam-frame">
-        <div class="cam-loading" id="camLoading">
-          <img class="sp" id="camRay" src="/static/mascot.png" alt="" />
-          영상 연결 중…
-        </div>
-        <img id="camStream" alt="대기줄 실시간 (블러 처리)" style="display:none" />
-        <div class="live-ray">
-          <img class="r" id="liveRay" src="/static/mascot.png" alt="" />
-          <span class="live-badge">LIVE</span>
-        </div>
-      </div>
-      <p class="cam-note">대기줄 실시간 · 사람은 블러 처리되며 저장하지 않습니다</p>
-    </section>
-
-    <!-- 급식 (설계도: 왼쪽 아래, 항상 보임) -->
+    <!-- 급식 (설계도: 왼쪽 아래) -->
     <section class="card menu-card">
       <div class="head"><h2>오늘의 급식</h2><span class="date" id="todayDate"></span></div>
       <div class="tabs">
@@ -254,29 +266,23 @@
       <ul class="meal-list" id="mealList"></ul>
     </section>
 
-    <!-- 알림 (설계도: 오른쪽 아래 — 설정하면 헤엄쳐 가고, 취소하면 돌아옴) -->
+    <!-- 알림 (설계도: 오른쪽 아래) -->
     <button class="alarm-card" id="alarmBtn" aria-pressed="false">
       <span class="tank">
-        <span class="swimmer" id="swimmer">
-          <img class="r" id="alarmRay" src="/static/mascot.png" alt="" />
-        </span>
+        <span class="swimmer" id="swimmer"><img src="/static/mascot.png" alt="" /></span>
         <span class="bubbles"><i></i><i></i><i></i></span>
       </span>
       <span class="alarm-label" id="alarmLabel">알림 설정</span>
-      <span class="alarm-sub" id="alarmSub">여유해지면 알려드려요</span>
+      <span class="alarm-sub" id="alarmSub">여유해지면 알림</span>
+      <span class="alarm-count" id="alarmCount" hidden></span>
     </button>
 
   </div>
-
-  <p class="allergy">
-    알레르기 유발식품: ①난류 ②우유 ③메밀 ④땅콩 ⑤대두 ⑥밀 ⑦고등어 ⑧게 ⑨새우 ⑩돼지고기
-    ⑪복숭아 ⑫토마토 ⑬아황산류 ⑭호두 ⑮닭고기 ⑯쇠고기 ⑰오징어 ⑱조개류 ⑲잣<br />
-    ※ 식자재 수급 사정에 따라 메뉴가 변경될 수 있습니다.
-  </p>
 </div>
 
+<div class="toast" id="toast"><img src="/static/mascot.png" alt="" />지금 여유해요! 다녀오세요</div>
+
 <script>
-/* ======================= 설정 ======================= */
 const CONFIG = {
   congestionApiUrl: "/api/status",
   camStreamUrl: "/video",
@@ -284,7 +290,6 @@ const CONFIG = {
   pollIntervalSec: 15,
   staleAfterSec: 120,
   fallbackMenu: {
-    date: "",
     breakfast: ["참치야채죽","매실장아찌","스크램블에그","배추김치","모듬시리얼 + 우유","사과쥬스"],
     lunch:     ["보리비빔밥 & 약고추장","청국장찌개(선)","콩나물무침","제육볶음","갓김치","방울토마토"],
     dinner:    ["찹쌀밥","닭개장","열무된장무침","돈까스&소스","배추김치","오라떼"],
@@ -295,31 +300,62 @@ function levelOf(v){ if (v<=12) return "ok"; if (v<=20) return "mid"; return "bu
 const LEVELS = {
   ok:   { word:"여유", reco:"지금 가면 딱 좋아요" },
   mid:  { word:"보통", reco:"조금 붐벼요" },
-  busy: { word:"혼잡", reco:"많이 붐벼요<br>잠시 후 추천" },
+  busy: { word:"혼잡", reco:"많이 붐벼요" },
 };
 
-/* ======================= 상태 ======================= */
 const $ = (id) => document.getElementById(id);
-const state = { value:null, updatedAt:null, live:false };
+const state = { value:null, wait:null, updatedAt:null, live:false, camLive:false, alarms:0 };
+// 이 브라우저를 구분하는 임시 ID (알림 인원 집계용, 개인정보 아님)
+const SID = Math.random().toString(36).slice(2) + Date.now().toString(36);
 let firstLoadDone = false, lastLevel = null;
 
+// 카메라가 실제로 살아 있을 때만 LIVE 로 표시 (죽었으면 OFF)
+function setCamLive(on){
+  state.camLive = on;
+  const b = $("liveBadge"), r = $("liveRay");
+  if (!b || !r) return;
+  b.textContent = on ? "LIVE" : "OFF";
+  b.classList.toggle("off", !on);
+  r.classList.toggle("off", !on);
+}
+
+// 알림을 기다리는 인원 표시
+function paintAlarmCount(){
+  const el = $("alarmCount");
+  if (!el) return;
+  if (state.alarms > 0){
+    el.hidden = false;
+    el.textContent = state.alarms + "명 대기 중";
+  } else {
+    el.hidden = true;
+  }
+}
+
 function applyState(){
-  const pill=$("stPill"), wordEl=$("statusWord"), recoEl=$("statusReco");
+  const cardEl=$("statusCard"), wordEl=$("statusWord"), recoEl=$("statusReco");
   const numEl=$("gaugeNum"), hdr=$("hdrLive"), label=$("liveLabel");
 
   if (state.value == null){
-    pill.className="st-pill"; pill.textContent="확인 중";
-    wordEl.textContent="—"; wordEl.style.color="var(--navy-soft)";
-    recoEl.textContent="데이터를 불러오는 중이에요";
-    numEl.textContent="—";
+    cardEl.className = "card status-card";
+    wordEl.textContent="—"; recoEl.textContent="불러오는 중";
+    $("waitVal").textContent="—"; numEl.textContent="";
     hdr.className="hdr-live"; label.textContent="연결 대기";
   } else {
     const key = levelOf(state.value), L = LEVELS[key];
-    pill.className = "st-pill " + key; pill.textContent = L.word;
+    cardEl.className = "card status-card " + key;
     wordEl.textContent = L.word;
-    wordEl.style.color = key==="ok" ? "var(--ok)" : key==="mid" ? "var(--mid)" : "var(--busy)";
-    recoEl.innerHTML = L.reco;
-    numEl.textContent = state.value + "명";
+    // 여유해도 알림 대기가 많으면 곧 몰릴 수 있다고 알려 준다
+    recoEl.textContent = (key === "ok" && state.alarms >= 5)
+      ? state.alarms + "명이 곧 올 수 있어요"
+      : L.reco;
+    if (state.wait == null){
+      // 서버가 wait_minutes 를 안 보내면 인원만 크게 보여준다
+      $("waitVal").textContent = state.value + "명";
+      numEl.textContent = "";
+    } else {
+      $("waitVal").textContent = state.wait <= 0 ? "바로 가능" : "약 " + state.wait + "분";
+      numEl.textContent = "대기 " + state.value + "명";
+    }
     hdr.className = "hdr-live" + (state.live ? " on" : "");
     label.textContent = state.live ? "실시간" : "예시";
     checkAlarm(key);
@@ -330,11 +366,11 @@ function applyState(){
 
 function updateRelative(){
   const el = $("updated");
-  if (state.value == null){ el.textContent = "연결 중…"; return; }
-  if (!state.live){ el.textContent = "예시 데이터"; return; }
-  const sec = Math.max(0, Math.round((Date.now() - state.updatedAt.getTime())/1000));
-  const txt = sec<5 ? "방금 전" : sec<60 ? sec+"초 전" : Math.floor(sec/60)+"분 전";
-  el.textContent = "업데이트 " + txt + (sec > CONFIG.staleAfterSec ? " · 지연" : "");
+  if (state.value == null){ el.textContent="연결 중…"; return; }
+  if (!state.live){ el.textContent="예시 데이터"; return; }
+  const sec = Math.max(0, Math.round((Date.now()-state.updatedAt.getTime())/1000));
+  el.textContent = (sec<5 ? "방금 전" : sec<60 ? sec+"초 전" : Math.floor(sec/60)+"분 전")
+                 + (sec > CONFIG.staleAfterSec ? " · 지연" : "");
 }
 
 async function pollCongestion(){
@@ -344,61 +380,75 @@ async function pollCongestion(){
     const d = await r.json();
     if (typeof d.count !== "number") throw new Error("no count");
     state.value = d.count;
+    const w = (d.wait_minutes ?? d.waitMinutes ?? d.wait);
+    state.wait = (typeof w === "number") ? w : null;
+    state.alarms = (typeof d.alarm_count === "number") ? d.alarm_count : 0;
     state.updatedAt = d.updatedAt ? new Date(d.updatedAt) : new Date();
     state.live = true;
+    if (typeof d.camera_live === "boolean") setCamLive(d.camera_live);
+    paintAlarmCount();
     applyState();
+    if (alarmOn) sendAlarm(true);          // 켜져 있음을 서버에 계속 알림
   }catch(e){
     console.warn("[혼잡도] 실패:", e.message);
+    setCamLive(false);                      // 서버가 죽었으면 LIVE 도 아님
     updateRelative();
   }finally{
     if (!firstLoadDone){ firstLoadDone = true; $("loading").classList.add("hide"); }
   }
 }
 
-/* ======================= 알림 =======================
-   설계도: 설정하면 가오리가 헤엄쳐 나가고, 취소하면 돌아온다 */
+/* ---- 알림: 설정하면 가오리가 헤엄쳐 나가고, 취소하면 돌아온다 ---- */
 let alarmOn = false;
 const alarmBtn = $("alarmBtn");
 
+async function sendAlarm(on){
+  try{
+    const r = await fetch("/api/alarm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: SID, on: on }),
+    });
+    const d = await r.json();
+    if (typeof d.alarm_count === "number"){ state.alarms = d.alarm_count; paintAlarmCount(); }
+  }catch(e){ console.warn("[알림] 전달 실패:", e.message); }
+}
 function setAlarm(on){
   alarmOn = on;
   alarmBtn.classList.toggle("on", on);
   alarmBtn.setAttribute("aria-pressed", on);
   $("alarmLabel").textContent = on ? "알림 취소" : "알림 설정";
-  $("alarmSub").innerHTML = on ? "여유해지면<br>알리러 갔어요" : "여유해지면<br>알려드려요";
+  $("alarmSub").textContent  = on ? "알리러 갔어요" : "여유해지면 알림";
 }
-
-alarmBtn.addEventListener("click", async () => {
-  if (alarmOn){ setAlarm(false); return; }          // 취소 → 가오리가 돌아옴
-  if (!("Notification" in window)){
-    $("alarmSub").innerHTML = "이 브라우저는<br>알림을 지원하지 않아요";
-    return;
+alarmBtn.addEventListener("click", () => {
+  if (alarmOn){ setAlarm(false); sendAlarm(false); return; }
+  setAlarm(true);
+  sendAlarm(true);                                  // 항상 켜짐 (권한은 있으면 추가로 사용)
+  if ("Notification" in window && Notification.permission === "default"){
+    Notification.requestPermission().catch(()=>{});
   }
-  let perm = Notification.permission;
-  if (perm === "default") perm = await Notification.requestPermission();
-  if (perm !== "granted"){
-    $("alarmSub").innerHTML = "브라우저 설정에서<br>알림을 허용해 주세요";
-    return;
-  }
-  setAlarm(true);                                    // 설정 → 가오리가 헤엄쳐 나감
 });
-
+function fireAlarm(){
+  const t = $("toast");
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 5000);
+  if (navigator.vibrate) { try { navigator.vibrate([120,60,120]); } catch(e){} }
+  if ("Notification" in window && Notification.permission === "granted"){
+    try{ new Notification("한그릇 뚝딱", { body:"급식실이 여유로워졌어요. 지금 가면 딱 좋아요!" }); }catch(e){}
+  }
+  setAlarm(false);                                 // 알리고 나면 가오리가 돌아옴
+  sendAlarm(false);
+}
 function checkAlarm(key){
   if (!alarmOn || !state.live) return;
-  if (key === "ok" && lastLevel && lastLevel !== "ok"){
-    try{
-      new Notification("한그릇 뚝딱 🍚", { body: "급식실이 여유로워졌어요. 지금 가면 딱 좋아요!" });
-    }catch(e){ console.warn("알림 실패:", e.message); }
-    setAlarm(false);                                 // 알리고 나면 가오리가 돌아옴
-  }
+  if (key === "ok" && lastLevel && lastLevel !== "ok") fireAlarm();
 }
 
-/* ======================= 급식 ======================= */
+/* ---- 급식 ---- */
 let menuData = CONFIG.fallbackMenu;
 function activeMealKey(){ return document.querySelector(".tab.active")?.dataset.meal || "lunch"; }
 function renderMeal(key){
-  const list = $("mealList");
-  const items = (menuData && menuData[key]) || [];
+  const list = $("mealList"), items = (menuData && menuData[key]) || [];
   list.innerHTML = "";
   if (!items.length){ list.innerHTML = '<li class="empty">메뉴 정보 없음</li>'; return; }
   for (const name of items){
@@ -415,7 +465,7 @@ document.querySelectorAll(".tab").forEach(tab => {
   });
 });
 async function loadMenu(){
-  if (!CONFIG.menuApiUrl){ menuData = CONFIG.fallbackMenu; renderMeal(activeMealKey()); return; }
+  if (!CONFIG.menuApiUrl){ renderMeal(activeMealKey()); return; }
   try{
     const r = await fetch(CONFIG.menuApiUrl, {cache:"no-store"});
     if (!r.ok) throw new Error("HTTP "+r.status);
@@ -434,21 +484,21 @@ async function loadMenu(){
   }
 }
 
-/* ======================= 시작 ======================= */
 (function init(){
   const now = new Date(), days = ["일","월","화","수","목","금","토"];
   $("todayDate").textContent = `${now.getMonth()+1}. ${now.getDate()} (${days[now.getDay()]})`;
   loadMenu();
+  setCamLive(false);
   applyState();
   pollCongestion();
-  setInterval(pollCongestion, Math.max(2, CONFIG.pollIntervalSec) * 1000);
+  setInterval(pollCongestion, Math.max(2, CONFIG.pollIntervalSec)*1000);
   setInterval(updateRelative, 1000);
 
-  // 카메라: 끊겨도 3초 뒤 자동 재연결
   const img = $("camStream"), loading = $("camLoading");
   img.addEventListener("load",  () => { loading.style.display="none"; img.style.display="block"; });
   img.addEventListener("error", () => {
     loading.style.display="flex"; img.style.display="none";
+    setCamLive(false);
     setTimeout(() => { img.src = CONFIG.camStreamUrl + "?t=" + Date.now(); }, 3000);
   });
   img.src = CONFIG.camStreamUrl;
